@@ -29,6 +29,32 @@ class OrderCalculator
   end
 end
 
+class PercentageDiscountCalculator < OrderCalculator
+  def initialize(discount_percentage)
+    @discount_percentage = discount_percentage
+  end
+
+  def calculate(items)
+    total = super
+    discounted_total = total * (1 - @discount_percentage / 100.0)
+    puts "Total with #{@discount_percentage}% discount: #{discounted_total}"
+    discounted_total
+  end
+end
+
+class FixedDiscountCalculator < OrderCalculator
+  def initialize(discount_amount)
+    @discount_amount = discount_amount
+  end
+
+  def calculate(items)
+    total = super
+    discounted_total = [total - @discount_amount, 0].max  # evita negativos
+    puts "Total with $#{@discount_amount} fixed discount: #{discounted_total}"
+    discounted_total
+  end
+end
+
 class EmailService
   def send_email
     # Lógica para enviar un correo electrónico de confirmación
@@ -55,7 +81,19 @@ end
 
 #Uso del codigo refactored
 items = [Item.new("Item 1", 100), Item.new("Item 2", 200)]
+
+# Order with no discount
 order = Order.new(items)
-puts order.calculate_total
+puts "Original total: #{order.calculate_total}"
 order.send_confirmation_email
 order.print_order
+
+# Order with percentage discount
+percentage_calculator = PercentageDiscountCalculator.new(10)  # 10% discount
+order_with_percentage = Order.new(items, calculator: percentage_calculator)
+puts "Percentage discount total: #{order_with_percentage.calculate_total}"
+
+# Order with fixed discount
+fixed_calculator = FixedDiscountCalculator.new(50)  # $50 discount
+order_with_fixed = Order.new(items, calculator: fixed_calculator)
+puts "Fixed discount total: #{order_with_fixed.calculate_total}"
