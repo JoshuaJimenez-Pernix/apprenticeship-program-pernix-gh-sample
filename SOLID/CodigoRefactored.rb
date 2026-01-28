@@ -19,6 +19,7 @@ class Order
   end
 end
 
+# Clase para calcular el total de la orden
 class OrderCalculator
   def calculate(items)
     total = 0
@@ -29,6 +30,7 @@ class OrderCalculator
   end
 end
 
+# Clase para calcular el descuento porcentaje
 class PercentageDiscountCalculator < OrderCalculator
   def initialize(discount_percentage)
     @discount_percentage = discount_percentage
@@ -42,6 +44,7 @@ class PercentageDiscountCalculator < OrderCalculator
   end
 end
 
+# Clase para calcular el descuento fijo
 class FixedDiscountCalculator < OrderCalculator
   def initialize(discount_amount)
     @discount_amount = discount_amount
@@ -55,6 +58,7 @@ class FixedDiscountCalculator < OrderCalculator
   end
 end
 
+# Clase para enviar el correo de confirmación
 class EmailService
   def send_email
     # Lógica para enviar un correo electrónico de confirmación
@@ -62,6 +66,7 @@ class EmailService
   end
 end
 
+# Clase para imprimir la orden
 class OrderPrinter
   def print(items)
     items.each do |item|
@@ -70,6 +75,7 @@ class OrderPrinter
   end
 end
 
+# Clase para creacion de items
 class Item
   attr_accessor :name, :price
 
@@ -82,18 +88,18 @@ end
 #Uso del codigo refactored
 items = [Item.new("Item 1", 100), Item.new("Item 2", 200)]
 
-# Order with no discount
+# Orden sin descuento
 order = Order.new(items)
 puts "Original total: #{order.calculate_total}"
 order.send_confirmation_email
 order.print_order
 
-# Order with percentage discount
+# Order con descuento porcentaje
 percentage_calculator = PercentageDiscountCalculator.new(10)  # 10% discount
 order_with_percentage = Order.new(items, calculator: percentage_calculator)
 puts "Percentage discount total: #{order_with_percentage.calculate_total}"
 
-# Order with fixed discount
+# Orden con descuento fijo
 fixed_calculator = FixedDiscountCalculator.new(50)  # $50 discount
 order_with_fixed = Order.new(items, calculator: fixed_calculator)
 puts "Fixed discount total: #{order_with_fixed.calculate_total}"
